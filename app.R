@@ -1,4 +1,5 @@
 ## app.R ##
+library(dplyr)
 library(shiny)
 library(shinydashboard)
 library(shinyWidgets)
@@ -11,13 +12,11 @@ tmt_channels <- c("126","127N","127C","128N","128C","129N","129C","130N","130C",
                   "131C","132N","132C","133N","133C","134N","134C","135N")
 
 ui <- dashboardPage(
-  dashboardHeader(title = "JUMP batch design"),
+  dashboardHeader(title = "JUMP-BREAD"),
   dashboardSidebar(
     sidebarMenu(
       menuItem("Introduction", tabName = "intro", icon = icon("fas fa-map-signs")),
-      menuItem("Imports", tabName = "inputdata", icon = icon("far fa-folder-open")),
-      menuItem("Results", tabName = "outputdata", icon = icon("fas fa-chart-line")),
-      menuItem("Help", tabName = "help", icon = icon("far fa-question-circle"))
+      menuItem("Program", tabName = "program", icon = icon("far fa-folder-open"))
     )
   ),
   ## Body content
@@ -27,24 +26,25 @@ ui <- dashboardPage(
       tabItem(tabName = "intro",
               fluidRow(
                 box(
-                  title = h1("Usage:"), status = "primary",
-                  h2("1) Make the input file."), br(),
-                  "An example input file can be downloaded below. The file need to be saved in .csv format. The first column is the sampleID, and from the second column will be the factors that need to be considered.", br(),br(),
-                  a(href="example_input_for_block_randomization.csv", "example input file", download=NA, target="_blank"),
-                  h2("2) Upload the input file."), br(), 
-                  "Click the “Imports” tab on the left. Upload your input file and choose how many factors you want the program to consider.",
-                  h2("3) Set up parameters."), br(), 
-                  "In the parameter box, you can choose the TMT plex, whether to use IR sample and use which channels for IR. For the number of iterations, you may use larger number when your sample size is large. After setting up the parameters, click the “Run” button. ", br(),
-                  h2("4) Check and download the results."), br(),
-                  "Click the “Results” tab on the left. You may need to wait for seconds or up to minutes to see the results depending on your sample size and the number of iterations. All results can be downloaded as an excel file.", br(), br(),
+                  title = h1("JUMP-BREAD"), status = "primary", width=12,
+                  "Author: Yingxue Fu",
+                  h2("Background"), br(),
+                  "Liquid chromatography−mass spectrometry (LC−MS)-based proteomics plays a pivotal role in biomedical research, enabling the identification and quantification of thousands of proteins across diverse biological conditions. To ensure reliable and reproducible proteome profiling, a robust experimental design is essential. A crucial aspect of such design is the organization of sample processing sequences and the creation of well-balanced sample sets when allocating them to different batches. This precautionary measure prevents the introduction of confounders that could bias data interpretation. ", br(), br(),
+                  "JUMP-BREAD is designed as a tool that simplifies the Block Randomization in Experimental Analysis and Design, especially when dealing with multiple explanatory variables simultaneously.",br(),
+                  h2("Usage"), br(),
+                  "1) Make the input file. An example input file can be downloaded below. The file need to be saved in .csv format. The first column is the sampleID, and from the second column will be the factors that need to be considered.", br(),br(),
+                  a(href="example_input_for_block_randomization.csv", "example input file", download=NA, target="_blank"),br(), br(),
+                  "2) Upload the input file. Click the “Program” tab on the left. Upload your input file and choose how many factors you want the program to consider.",br(), br(),
+                  "3) Set up parameters. In the parameter box, you can choose the TMT plex, whether to use IR sample and use which channels for IR. For the number of iterations, you may use larger number when your sample size is large. After setting up the parameters, click the “Run” button. ", br(), br(),
+                  "4) Check and download the results. You may need to wait for seconds or up to minutes to see the results depending on your sample size and the number of iterations. All results can be downloaded as an excel file.", br(), br(),
                 )
               )
       ),
       
       # Second tab content
-      tabItem(tabName = "inputdata",
+      tabItem(tabName = "program",
               fluidRow(
-                column(width = 4,
+                column(width = 3,
                   box(title = "Input Data", status = "primary", width = NULL,
                       fileInput("uploadData","Upload sample infomation"),
                       numericInput(inputId = "nFactors", label = "No. of factors", value = 0)),
@@ -54,34 +54,32 @@ ui <- dashboardPage(
                                         choices = c("Yes", "No"), justified = TRUE),
                       uiOutput("chooseIRchannel"),
                       sliderInput("n_iterations", "Number of iterations", value = 100, min = 50, max = 1000)
-                      )
+                      ),
+                  box(title = "Run program", width = NULL, status = "primary",
+                      actionButton("run", "Run", class = "btn btn-primary btn-block"))
                 ),
-                column(width = 8,
+                column(width = 9,
                   box(title = "Sample Information", status = "primary", width = NULL,
-                      dataTableOutput("inputData"))
+                      dataTableOutput("inputData")),
+                  box(title = "Batch and channel assignation", 
+                      status = "primary", width = NULL,
+                      dataTableOutput("sample_batch")),
+                  box(title = "Batch design matrix",
+                      status = "primary", width = NULL,
+                      fluidRow(column(2, tableOutput("batch_design_1")),
+                               column(4, tableOutput("batch_design_2")),
+                               column(3, tableOutput("batch_design_3"))),
+                      downloadButton("download_all", label = "Download all results"))
                 )
-              ),
-              
-              fluidRow(box(title = "Run program", solidHeader = T, width = 4,
-                           actionButton("run", "Run", class = "btn btn-primary btn-block")))
-      ),
-      
-      tabItem(tabName = "outputdata",
-              box(title = "Batch and channel assignation", 
-                  status = "primary", width = 12,
-                  dataTableOutput("sample_batch")),
-              box(title = "Batch design matrix",
-                  status = "primary", width = 12,
-                  fluidRow(column(3, tableOutput("batch_design_1")),
-                           column(4, tableOutput("batch_design_2")),
-                           column(5, tableOutput("batch_design_3"))),
-                            downloadButton("download_all", label = "Download all results"))
               )
+      )
+
       )
     )
 )
 
 server <- function(input, output) {
+  
   df <- reactive(read.csv(input$uploadData$datapath, header = T))
   
   output$inputData <- DT::renderDataTable({
