@@ -5,7 +5,8 @@ Author: Yingxue Fu
 ## Background
 Liquid chromatography−mass spectrometry (LC−MS)-based proteomics plays a pivotal role in biomedical research, enabling the identification and quantification of thousands of proteins across diverse biological conditions. To ensure reliable and reproducible proteome profiling, a robust experimental design is essential. A crucial aspect of such design is the organization of sample processing sequences and the creation of well-balanced sample sets when allocating them to different batches. This precautionary measure prevents the introduction of confounders that could bias data interpretation. 
 
-JUMP-BREAD is designed as a tool that simplifies the **B**lock **R**andomization in **E**xperimental **A**nalysis and **D**esign, especially when dealing with multiple explanatory variables simultaneously.
+JUMP-BREAD is designed as a tool that simplifies the **B**lock **R**andomization in **E**xperimental **A**nalysis and **D**esign, especially when dealing with multiple explanatory variables simultaneously. 
+The program is available as an R shiny app: [JUMP-BREAD](https://yingxue-fu.shinyapps.io/jump-bread/).
 
 ## Methods 
 The JUMP-BREAD algorithm consists of three main procedures: 
