@@ -3,23 +3,22 @@
 Author: Yingxue Fu 
 
 ## Background
-Liquid chromatography−mass spectrometry (LC−MS)-based proteomics plays a pivotal role in biomedical research, enabling the identification and quantification of thousands of proteins across diverse biological conditions. To ensure reliable and reproducible proteome profiling, a robust experimental design is essential. A crucial aspect of such design is the organization of sample processing sequences and the creation of well-balanced sample sets when allocating them to different batches. This precautionary measure prevents the introduction of confounders that could bias data interpretation. 
-
-JUMP-BREAD is designed as a tool that simplifies the **B**lock **R**andomization in **E**xperimental **A**nalysis and **D**esign, especially when dealing with multiple explanatory variables simultaneously. 
-The program is available as an R shiny app: [JUMP-BREAD](https://yingxue-fu.shinyapps.io/jump-bread/).
+Liquid Chromatography with tandem mass spectrometry (LC-MS/MS)-based proteomics plays a pivotal role in biomedical research, enabling the identification and quantification of thousands of proteins across diverse biological conditions. To ensure reliable and reproducible proteome profiling, a robust experimental design is essential to eliminate systematic bias and facilitate appropriate statistical downstream analyses. A key aspect of experimental design involves organizing sample processing sequences and creating well-balanced sample sets when allocating them to different batches. ![image](www/images/)
+ 
+JUMP-BREAD is designed as a tool that simplifies the **B**lock **R**andomization in **E**xperimental **A**nalysis and **D**esign, especially when dealing with multiple explanatory variables simultaneously. It supports both label-free and labeling proteomics experiments, making it suitable for both small- and large-scale proteomics studies.
 
 ## Methods 
 The JUMP-BREAD algorithm consists of three main procedures: 
-1. Generating batch design matrix based on the distribution of the first explanatory variable, considering the specified number and size of batches; 
-2. Allocating samples to each batch, taking into account the distribution of the second explanatory variable; 
-3. Optimizing batch design scenario for the third and subsequent variables. 
+1. Determining the minimum number of batches needed based on the number of samples, batch volume, and the number of internal reference (IR) samples in a batch; 
+2. Generating a batch design matrix based on the distributions of the first and second explanatory variables; 
+3. Randomly allocating samples to each batch based on the batch design matrix and identifying the optimal batch design scenario for the third and subsequent variables.
 
 ## Usage
 The utilization of JUMP-BREAD involves a straightforward process comprising the following steps: 
-- Step 1: Choose a .csv file containing sample names and factors, such as sex, age, and experimental groups (e.g., Treatment vs. Control). After uploading the sample information, one or more plots will be presented to assist users in assessing the distribution of each factor. Note that factors should be categorical variables, and continuous variables should be grouped before uploading. 
-- Step 2: Indicate whether the experiment is label-free or labeling and specify the number of samples in each batch. For labeling experiments like TMT-labeling, the number of samples in each batch is fixed (e.g., 11, 16, or 18), while label-free experiments have no such limitation. 
-- Step 3: Select whether to use common reference samples across all batches and specify the channel(s) for common reference sample(s) if a labeling experiment is used. 
-- Step 4: Set the maximum number of attempts and run the program. The algorithm will then seek a solution that best meets all the considered factors. 
+- Step 1: Choose a .csv file containing sample names and factors, such as sex, age, and experimental groups. After uploading the sample information, one or more plots will be presented to assist users in assessing the distribution of each factor. Note that factors should be categorical variables, and continuous variables should be grouped before uploading. 
+- Step 2: Indicate whether the experiment is label-free or labeling and specify the number of samples in each batch. For labeling experiments like TMT-labeling, the maximum number of samples in a batch should not exceed 18. 
+- Step 3: Select whether to use IR samples across all batches and the number of IR samples in a batch. 
+- Step 4: Set the maximum number of optimization attempts and run the program. The algorithm will then seek a solution that best meets all the considered factors. 
 
 After the program finishes running, JUMP-BREAD generates a sample assignation table and the sample number distribution of each factor across different batches, which can be downloaded as an .xlsx file. The sample assignation table contains the information provided by the user alongside the batch information generated by the program. For labeling experiments, the table contains an additional column specifying the assigned channel for each sample, facilitating processing samples with specific labeling reagents.
 
