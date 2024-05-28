@@ -3,7 +3,7 @@
 Author: Yingxue Fu 
 
 ## Background
-Liquid Chromatography with tandem mass spectrometry (LC-MS/MS)-based proteomics plays a pivotal role in biomedical research, enabling the identification and quantification of thousands of proteins across diverse biological conditions. To ensure reliable and reproducible proteome profiling, a robust experimental design is essential to eliminate systematic bias and facilitate appropriate statistical downstream analyses. A key aspect of experimental design involves organizing sample processing sequences and creating well-balanced sample sets when allocating them to different batches. ![image](www/images/)
+Liquid Chromatography with tandem mass spectrometry (LC-MS/MS)-based proteomics plays a pivotal role in biomedical research, enabling the identification and quantification of thousands of proteins across diverse biological conditions. To ensure reliable and reproducible proteome profiling, a robust experimental design is essential to eliminate systematic bias and facilitate appropriate statistical downstream analyses. A key aspect of experimental design involves organizing sample processing sequences and creating well-balanced sample sets when allocating them to different batches. ![image](https://github.com/yingxue-fu/JUMP_BREAD/blob/main/www/images/bread_background.png)
  
 JUMP-BREAD is designed as a tool that simplifies the **B**lock **R**andomization in **E**xperimental **A**nalysis and **D**esign, especially when dealing with multiple explanatory variables simultaneously. It supports both label-free and labeling proteomics experiments, making it suitable for both small- and large-scale proteomics studies.
 
